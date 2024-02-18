@@ -197,7 +197,9 @@
                     }
 
                     // Fetch data from the API
-                    fetch(apiUrl)
+                    fetch(apiUrl, {
+                      method: "GET"
+                    })
                       .then(response => response.json())
                       .then(data => {
                         const changelogContainer = document.getElementById('changelog-container');
