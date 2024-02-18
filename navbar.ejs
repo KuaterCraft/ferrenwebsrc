@@ -1,0 +1,42 @@
+<!-- Navbar Start -->
+
+<nav class="navbar navbar-expand-lg bg-white navbar-light shadow-sm px-5 py-3 py-lg-0 sticky-top">
+
+  <a href="/" class="navbar-brand p-0">
+    <div class="d-flex align-items-center">
+      <img src="https://cdn.discordapp.com/attachments/1064773686550343722/1198302871402336338/FerrenBot.png"
+        alt="FerrenBot logo" width="50">
+      <h1 class="text-primary ms-2">Ferren</h1>
+    </div>
+  </a>
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarCollapse">
+    <div class="navbar-nav ms-auto py-0 me-n3">
+      <% if (user && user.avatarURL) { %>
+        <a href="/" id="home" class="nav-item nav-link nav-item-special">Home</a>
+        <a href="https://frstatus.fr.to" id="status" class="nav-item nav-link nav-item-special">Status</a>
+        <a href="/changelogs" id="changeLogs" class="nav-item nav-link nav-item-special">Changelogs</a>
+        <a href="/servers" id="serversLink" class="nav-item nav-link nav-item-special">Servers</a>
+        <a href="/manage" id="manageAcc" class="nav-item nav-link nav-item-special">Manage</a>
+        <li id="loginButton" class="loginButton nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="/manage" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <img id="pfpDc" class="profile-picture" src="<%= user.avatarURL %>" alt="Profile Picture">
+            <%= user.username %>
+          </a>
+          <ul class="dropdown-menu bg-secondary" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item bg-secondary" href="/logout">Logout</a></li>
+          </ul>
+        </li>
+
+        <% } else { %>
+          <a href="/" id="home" class="nav-item nav-link">Home</a>
+          <a href="https://frstatus.fr.to" id="home" class="nav-item nav-link">Status</a>
+          <a id="loginButton" href="/login" class="nav-item nav-link loginButton">Login</a>
+          <% } %>
+    </div>
+  </div>
+</nav>
+<!-- Navbar End -->
