@@ -136,7 +136,7 @@
                 <script>
                   async function fetchServerData() {
                     try {
-                      const response = await fetch("<%= process.env.serverUrl %>" + '/guilddata', {
+                      const response = await fetch("<%= process.env.url %>/guilddata", {
                         method: "GET"
                       });
                       const data = await response.json();

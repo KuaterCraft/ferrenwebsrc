@@ -119,10 +119,17 @@ app.use(express.static(path.join(__dirname)));
 app.use('/img', express.static(path.join(__dirname, 'img')));
 
 // Normal Routes
-app.get('/changelogs', (req, res) => {
+app.get('/changelogs', async (req, res) => {
     res.render('changelogs', { css: res.cssUrl, user: req.user });
 });
 
+app.get('/changelog', async (req, res) => {
+    const resp = await fetch(`${process.env.serverUrl}/changelog`, {
+        method: "GET"
+    })
+    const data = await resp.json();
+    res.json(data)
+})
 
 app.get('/callback', passport.authenticate('discord', {
     failureRedirect: '/login',
@@ -174,9 +181,17 @@ app.get('/logout', function (req, res) {
     });
 });
 
-app.get('/servers', (req, res) => {
+app.get('/servers', async (req, res) => {
     res.render('servers', { user: req.user, css: res.cssUrl });
 });
+
+app.get('/guilddata', async (req, res) => {
+    const resp = await fetch(`${process.env.serverUrl}/guilddata`, {
+        method: "GET"
+    });
+    const data = await resp.json();
+    res.json(data)
+})
 
 app.get('/user/:userId', async (req, res) => {
     if (!req.user) {

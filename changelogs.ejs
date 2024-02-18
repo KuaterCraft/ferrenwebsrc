@@ -181,8 +181,6 @@
                   <script src="../js/bootstrap.bundle.min.js"></script>
                   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
                   <script>
-                    const apiUrl = "<%= process.env.serverUrl %>" + '/changelog';
-
                     // Function to convert [text](link) to <a> tag
                     function convertToAnchorTag(text) {
                       const linkRegex = /\[(.*?)\]\((.*?)\)/g;
@@ -197,7 +195,7 @@
                     }
 
                     // Fetch data from the API
-                    fetch(apiUrl, {
+                    fetch("<%= process.env.url %>/changelog", {
                       method: "GET"
                     })
                       .then(response => response.json())
