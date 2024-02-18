@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Ferren Dash</title>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta content="[Ferren Dash](https://discord.gg/4TeeFAdnuD)" name="keywords">
+  <meta content="Ferren Servers Section, see the guilds ferren is in!" name="description">
+  <meta name="theme-color" content="#efc75e">
+  <meta property="og:image" content="/FerrenBot.png">
+  <meta property="og:url" content="https://ferren.fr.to/">
+  <link href="/FerrenBot.png" rel="icon">
+
+  <!-- Favicon -->
+  <link href="img/FerrenBot.png" rel="icon">
+
+  <!-- Google Web Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700&family=Open+Sans:wght@400;600&display=swap"
+    rel="stylesheet">
+
+  <!-- Icon Font Stylesheet -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- Libraries Stylesheet -->
+  <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+  <!-- Customized Bootstrap Stylesheet -->
+   <% for (const link of css) { %>
+
+    <link rel="stylesheet" href="<%= link %>">
+
+  <% } %>
+
+  <style>
+    .avatar-circle {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+
+    .avatar-circle img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .imageFerren {
+      border-radius: 15px;
+      width: 300px;
+      height: 300px;
+      margin: auto;
+      display: block;
+      transform: skewY(7deg);
+      animation: bounce 1s infinite alternate;
+    }
+      .notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    z-index: 9999;
+    display: none;
+  }
+
+  .notification.success {
+    background-color: #28a745;
+  }
+
+  .notification.error {
+    background-color: #dc3545;
+  }
+  </style>
+</head>
+
+
+<body>
+
+  <div id="content">
+<%- include('navbar') %>
+<div id="notification" class="notification"></div>
+<!-- About Start -->
+<div class="container-fluid bg-secondary p-0">
+  <div class="row g-0">
+    <div class="col-lg-6 py-6 px-5">
+      <h1 class="display-5 mb-4">User: <%= user.username %></h1>
+      <h4 class="text-primary mb-4">User ID: <%= user.id %></h4>
+      <p class="mb-4"></p>
+    </div>
+    <div class="col-lg-6">
+      <div class="h-100 d-flex flex-column justify-content-center bg-primary p-5">
+        <img class="imageFerren" src="https://cdn.discordapp.com/avatars/<%= user.id %>/<%= user.avatar %>"
+          id="avatarImage">
+      </div>
+    </div>
+  </div>
+</div>
+<!-- About End -->
+
+<!-- Edit Your account Start -->
+<div class="container-fluid pt-6 px-5">
+  <div class="text-center mx-auto mb-5" style="max-width: 600px;">
+    <h1 class="display-5 mb-0">Edit Your Account</h1>
+    <hr class="w-25 mx-auto bg-primary">
+  </div>
+  <div class="row g-5">
+    <!-- Your Edit Level's card Form/Card goes here -->
+    <div class="col-lg-12">
+      <!-- Edit Card for PC -->
+      <div class="card shadow-lg p-5 d-none d-lg-block" style="border-radius: 10px;">
+        <div class="d-flex justify-content-between align-items-center">
+          <h2>Edit Your Level's Card</h2>
+          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal" style="
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+">Edit</button>
+        </div>
+      </div>
+      <% if (profileData) { %>
+        <!-- Edit Profile Card for PC -->
+        <div class="card shadow-lg p-5 d-none d-lg-block mt-4" style="border-radius: 10px;">
+          <div class="d-flex justify-content-between align-items-center">
+            <h2>Edit Your Profile</h2>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal" style="
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+">Edit</button>
+          </div>
+        </div>
+
+        <!-- Edit Profile Card for Mobile -->
+        <div class="card shadow-lg p-5 d-block d-lg-none mt-4" style="border-radius: 10px;" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+          <div class="d-flex justify-content-between align-items-center">
+            <h2>Edit Your Profile</h2>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal" style="
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+">Edit</button>
+          </div>
+        </div>
+      <% } else { %>
+        <!-- Create Profile Card for PC -->
+        <div class="card shadow-lg p-5 d-none d-lg-block mt-4" style="border-radius: 10px;">
+          <div class="d-flex justify-content-between align-items-center">
+            <h2>Profile Not Created</h2>
+            <form action="/createProfile" method="post">
+            <button class="btn btn-primary" type="submit">Create Now</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Create Profile Card for Mobile -->
+        <div class="card shadow-lg p-5 d-block d-lg-none mt-4" style="border-radius: 10px;">
+          <div class="d-flex justify-content-between align-items-center">
+            <h2>Profile Not Created</h2>
+            <form action="/createProfile" method="post">
+            <button class="btn btn-primary" type="submit">Create Now</button>
+            </form>
+          </div>
+        </div>
+      <% } %>
+
+      <!-- Clickable Card for Mobile -->
+      <div class="card shadow-lg p-5 d-block d-lg-none mt-4" style="border-radius: 10px;">
+        <div class="d-flex justify-content-between align-items-center">
+          <h2>Edit Your Level's Card</h2>
+          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal" style="
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+">Edit</button>
+        </div>
+        <!-- Your form elements can go here -->
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Edit Your account End -->
+
+<!-- Custom Modal UI Profile -->
+<% if (profileData) { %>
+<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editModalLabel">Edit Your Profile!</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <% if (user) { %>
+          <form action="/saveProfileData" method="POST">
+            <div class="mb-3">
+              <label class="form-label">User</label>
+              <input type="text" class="form-control" value="<%= user.id %> | <%= user.username %>" readonly>
+            </div>
+
+            <div class="mb-3">
+              <label for="gender" class="form-label">Gender</label>
+              <div class="input-group">
+                <select class="form-select" id="gender" name="gender">
+                  <option value="<%= profileData.Gender || 'N/A' %>"><%= profileData.Gender || 'N/A' %></option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="age" class="form-label">Age</label>
+              <div class="input-group">
+                <input type="text" class="form-control" id="age" name="age"
+                  value="<%= profileData.Age || 'N/A' %>">
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="birthday" class="form-label">Birthday</label>
+              <div class="input-group">
+                <input type="text" class="form-control datepicker" id="birthday" name="birthday"
+                  value="<%= profileData.Birthday || 'N/A' %>">
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="color" class="form-label">Color</label>
+              <div class="input-group">
+                <input type="text" class="form-control" id="color" name="color"
+                  value="<%= profileData.Color || 'N/A' %>"
+                  oninput="handleColorInput(this)">
+                <input type="color" id="colorPicker" class="form-control" style="height: 40px; width: 40px; padding: 0;"
+                  oninput="syncColorInput(this)">
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="Pet" class="form-label">Pet</label>
+              <div class="input-group">
+                <input type="text" class="form-control" id="Pet" name="Pet"
+                  value="<%= profileData.Pet || 'N/A' %>">
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="country" class="form-label">Country</label>
+              <div class="input-group">
+                <input type="text" class="form-control" id="country" name="country"
+                  value="<%= profileData.Origin || 'N/A' %>">
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="songs" class="form-label">Songs</label>
+              <div class="input-group">
+                <input type="text" class="form-control" id="songs" name="songs"
+                  value="<%= profileData.Songs.length ? profileData.Songs.join(', ') : 'N/A' %>">
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="movies" class="form-label">Movies</label>
+              <div class="input-group">
+                <input type="text" class="form-control" id="movies" name="movies"
+                  value="<%= profileData.Movies.length ? profileData.Movies.join(', ') : 'N/A' %>">
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="actors" class="form-label">Actors</label>
+              <div class="input-group">
+                <input type="text" class="form-control" id="actors" name="actors"
+                  value="<%= profileData.Actors.length ? profileData.Actors.join(', ') : 'N/A' %>">
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="artists" class="form-label">Artists</label>
+              <div class="input-group">
+                <input type="text" class="form-control" id="artists" name="artists"
+                  value="<%= profileData.Artists.length ? profileData.Artists.join(', ') : 'N/A' %>">
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="food" class="form-label">Food</label>
+              <div class="input-group">
+                <input type="text" class="form-control" id="food" name="food"
+                  value="<%= profileData.Food.length ? profileData.Food.join(', ') : 'N/A' %>">
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="hobbys" class="form-label">Hobbies</label>
+              <div class="input-group">
+                <input type="text" class="form-control" id="hobbys" name="hobbys"
+                  value="<%= profileData.Hobbys.length ? profileData.Hobbys.join(', ') : 'N/A' %>">
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="status" class="form-label">Status</label>
+              <div class="input-group">
+                <input type="text" class="form-control" id="status" name="status"
+                  value="<%= profileData.Status || 'N/A' %>">
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="aboutme" class="form-label">About Me</label>
+              <div class="input-group">
+                <textarea class="form-control" id="aboutme" name="aboutme" rows="3"><%= profileData.Aboutme || 'N/A' %></textarea>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Save Changes</button>
+            </div>
+          </form>
+        <% } else { %>
+          <p>Please login first!</p>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>
+<% } %>
+<!-- Custom Modal UI End profile-->
+          
+<!-- Custom Modal UI Levels Card -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editModalLabel">Edit Your Level's card [URL and Hexcolor must be valid!]</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <% if (user) { %>
+          <form action="/saveRankCard" method="POST">
+              
+<div class="mb-3">
+  <label for="progressBarColors" class="form-label">Font + Bubble Color</label>
+  <div class="input-group">
+    <input type="text" class="form-control" id="progressBarColors" name="progressBarColors"
+           value="<%= levelsData && levelsData.RankCard ? levelsData.RankCard.progressBarColors : '' %>"
+           oninput="handleColorInput(this)">
+    <input type="color" id="colorPicker" class="form-control" style="height: 40px; width: 40px; padding: 0;"
+           oninput="syncColorInput(this)">
+  </div>
+</div>
+
+<div class="mb-3">
+  <label for="discriminatorColor" class="form-label">Background Color</label>
+  <div class="input-group">
+    <input type="text" class="form-control" id="discriminatorColor" name="discriminatorColor"
+           value="<%= levelsData && levelsData.RankCard ? levelsData.RankCard.discriminatorColor : '' %>"
+           oninput="handleColorInput(this)">
+    <input type="color" id="discriminatorColorPicker" class="form-control" style="height: 40px; width: 40px; padding: 0;"
+           oninput="syncColorInput(this)">
+  </div>
+</div>
+
+
+            <div class="modal-footer">
+  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+  <button type="submit" class="btn btn-primary">Save Changes</button>
+
+</div>
+          </form>
+        <% } else { %>
+          <p>Please login first!</p>
+        <% } %>
+      </div>
+      
+    </div>
+  </div>
+</div>
+<!-- Custom Modal UI End -->
+
+
+
+<!-- Services Start -->
+<div class="container-fluid pt-6 px-5">
+  <div class="text-center mx-auto mb-5" style="max-width: 600px;">
+    <h1 class="display-5 mb-0">Soon!</h1>
+    <hr class="w-25 mx-auto bg-primary">
+  </div>
+  <div class="row g-5" id="serverDataContainer">
+    <!-- Guild Data will be inserted here -->
+  </div>
+</div>
+<!-- Services End -->
+
+<%- include('footer') %>
+
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square rounded-circle back-to-top"><i class="bi bi-arrow-up" style="
+      justify-content: center;
+      display: flex;
+      align-items: center;
+      position: relative;
+      top: 5px;
+      left: 1px;
+  "></i></a>
+
+
+<!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="lib/easing/easing.min.js"></script>
+<script src="lib/waypoints/waypoints.min.js"></script>
+<script src="lib/owlcarousel/owl.carousel.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="js/main.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/css/bootstrap-datepicker.min.css" rel="stylesheet"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/js/bootstrap-datepicker.min.js"></script></script>
+<script>
+  $(document).ready(function () {
+    $('.datepicker').datepicker({
+      format: 'mm/dd', // Set the desired date format
+      autoclose: true,
+    });
+  });
+</script>
+<script>
+  // Function to add "#" to the color input field if missing and prevent its removal
+  function handleColorInput(input) {
+    const colorPicker = input.nextElementSibling;
+    let hexColor = input.value.trim();
+    
+    // Add "#" if missing
+    if (!hexColor.startsWith('#')) {
+      hexColor = '#' + hexColor;
+    }
+
+    // Prevent removal of "#"
+    if (hexColor === '#') {
+      colorPicker.value = '#000000'; // Set a default color if "#" is the only value
+    } else {
+      colorPicker.value = hexColor;
+    }
+
+    input.value = hexColor; // Update the input value
+  }
+
+  // Function to handle URL input
+  function handleUrlInput(input) {
+    let value = input.value.trim();
+    if (value !== '' && !/^https?:\/\//i.test(value)) {
+      value = `https://${value.replace(/^https?:\/\//i, '')}`;
+      input.value = value;
+    }
+  }
+
+  // Function to sync the color input value with the color picker
+  function syncColorInput(colorPicker) {
+    const colorInput = colorPicker.previousElementSibling;
+    colorInput.value = colorPicker.value;
+  }
+</script>
+
+  </div>
+</body>
+
+</html>
