@@ -12,6 +12,7 @@ const guildFunc = require(`./database/models/functions`);
 const bodyParser = require('body-parser');
 const mySecret = "---2NDQyMDk2NzY2Njk1NDI4MA.GvwAcp.siywtves8ba3itsuyvb3iukye";
 const fs = require('fs');
+require('https').globalAgent.options.rejectUnauthorized = false;
 require('dotenv').config()
 
 //database
