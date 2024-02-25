@@ -160,27 +160,7 @@ app.get('/serverurl', async (req, res) => {
 })
 
 app.get('/', async (req, res) => {
-    const BotStats = process.env.serverUrl + "/botStats";
-    try {
-        const respo = await fetch(BotStats);
-        if (respo.status === 200) {
-            const data = await respo.json();
-            res.render('index', { user: req.user, css: res.cssUrl, data: data });
-        } else {
-            throw new Error("API returned non-200 status");
-        }
-    } catch (error) {
-        const msg = "Api down";
-        const data = {
-            guilds: msg,
-            users: msg,
-            slashCommand: msg,
-            databaseLatency: msg,
-            pingLatency: msg,
-            prefixCommand: msg
-        };
-        res.render('index', { user: req.user, css: res.cssUrl, data: data });
-    }
+    res.render('index', { user: req.user, css: res.cssUrl });
 });
 
 
