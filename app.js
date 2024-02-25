@@ -432,6 +432,6 @@ app.use((req, res, next) => {
     res.status(404).render('404', { user: req.user, css: res.cssUrl });
 });
 
-app.listen(3000, () => {
+app.listen(80, () => {
     console.log(chalk.yellow(chalk.bold(`Ferren`)), (chalk.white(`|`)), chalk.red(`Dashboard`), chalk.green(`online!`))
 });
