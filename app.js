@@ -356,7 +356,7 @@ app.post('/hexifyAuth', async (req, res) => {
     var ip = req.headers['x-host-ip'] || req.socket.remoteAddress;
     console.log(req.headers['x-host-ip'])
     console.log(req.headers['x-real-ip'])
-    conosle.log(req.headers['x-forwarded-for'])
+    console.log(req.headers['x-forwarded-for'])
     const reqVer = req.headers.version
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
