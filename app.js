@@ -353,10 +353,7 @@ app.post('/saveProfileData', async (req, res) => {
 
 app.post('/hexifyAuth', async (req, res) => {
     const authHeader = req.headers.authorization;
-    var ip = req.headers['x-host-ip'] || req.socket.remoteAddress;
-    console.log(req.headers['x-host-ip'] + "host ip")
-    console.log(req.headers['x-real-ip'] + "real ip")
-    console.log(req.headers['x-forwarded-for'] + "undefined shit")
+    var ip = req.headers['x-forwarded-for'].split(',')[0].trim();
     const reqVer = req.headers.version
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
