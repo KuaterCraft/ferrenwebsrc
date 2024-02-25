@@ -151,8 +151,7 @@ app.get('/callback', passport.authenticate('discord', {
 
 app.get('/serverurl', async (req, res) => {
     try {
-        const resp = await fetch(process.env.serverUrl)
-        if (resp.status === 200) return res.json({ url: `${process.env.serverUlr}` })
+        return res.json({ url: process.env.serverFetchUrl })
     } catch (error) {
         return res.json({ url: "https://ferren.fr.to" })
     }
@@ -433,6 +432,6 @@ app.use((req, res, next) => {
     res.status(404).render('404', { user: req.user, css: res.cssUrl });
 });
 
-app.listen(80, () => {
+app.listen(3000, () => {
     console.log(chalk.yellow(chalk.bold(`Ferren`)), (chalk.white(`|`)), chalk.red(`Dashboard`), chalk.green(`online!`))
 });
