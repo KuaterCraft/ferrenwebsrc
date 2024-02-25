@@ -118,6 +118,7 @@ passport.use(new DiscordStrategy({
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname));
+app.set('trust proxy', true);
 
 // Serve static files
 app.use('/css', express.static(path.join(__dirname, 'css')));
@@ -353,7 +354,6 @@ app.post('/saveProfileData', async (req, res) => {
 app.post('/hexifyAuth', async (req, res) => {
     const authHeader = req.headers.authorization;
     var ip = req.headers['x-host-ip'] || req.socket.remoteAddress;
-    console.log("posted")
     console.log(req.headers['x-host-ip'])
     console.log(req.socket.remoteAddress)
     const reqVer = req.headers.version
