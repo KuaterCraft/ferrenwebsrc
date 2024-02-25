@@ -385,9 +385,9 @@ app.post('/hexifyAuth', async (req, res) => {
         data.ip = ip;
         await data.save();
     }
-    let ver = require(`${process.cwd()}/src/config/bot`)
+    
     if (reqVer) {
-        if (reqVer !== ver.PACKAGE_MUSIC) return res.status(401).json({ error: 'Unauthorized. There is a new verion of the bot in the store! download it as older version are not supported' });
+        if (reqVer !== `${process.env.PACKAGE_MUSIC}`) return res.status(401).json({ error: 'Unauthorized. There is a new verion of the bot in the store! download it as older version are not supported' });
     }
     //else {
     //    return res.status(401).json({ error: 'Unauthorized. There is a new verion of the bot in the store! download it older version are not supported' });
