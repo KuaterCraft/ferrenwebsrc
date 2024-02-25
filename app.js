@@ -149,6 +149,15 @@ app.get('/callback', passport.authenticate('discord', {
     res.redirect('/');
 });
 
+app.get('/serverurl', async (req, res) => {
+    try {
+        const resp = await fetch(process.env.serverUrl)
+        if (resp.status === 200) return res.json({ url: `${process.env.serverUlr}` })
+    } catch (error) {
+        return res.json({ url: "https://ferren.fr.to" })
+    }
+})
+
 app.get('/', async (req, res) => {
     const BotStats = process.env.serverUrl + "/botStats";
     try {
