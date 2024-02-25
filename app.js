@@ -373,9 +373,9 @@ app.post('/hexifyAuth', async (req, res) => {
     if (reqVer) {
         if (reqVer !== `${process.env.PACKAGE_MUSIC}`) return res.status(401).json({ error: 'Unauthorized. There is a new verion of the bot in the store! download it as older version are not supported' });
     }
-    //else {
-    //    return res.status(401).json({ error: 'Unauthorized. There is a new verion of the bot in the store! download it older version are not supported' });
-    //}
+    else {
+       return res.status(401).json({ error: 'Unauthorized. There is a new verion of the bot in the store! download it as older version are not supported' });
+    }
     if (ip !== data.ip) return res.status(401).json({ error: 'Unauthorized. You cannot use multiple hosts with single license key. Only 1 ip is allowed join discord for support. Get a license key at discord.gg/DfKpcAnU67' });
 
     if (!data) {
