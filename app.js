@@ -16,6 +16,8 @@ const fs = require('fs');
 require('https').globalAgent.options.rejectUnauthorized = false;
 require('dotenv').config()
 
+const port = process.env.PORT || 10000;
+
 //database
 mongoose.set('strictQuery', false);
 async function connect() {
@@ -369,6 +371,7 @@ app.post('/hexifyAuth', async (req, res) => {
         await data.save();
     }
 
+    
     if (reqVer) {
         if (reqVer !== `${process.env.PACKAGE_MUSIC}`) return res.status(401).json({ error: 'Unauthorized. There is a new verion of the bot in the store! download it as older version are not supported' });
     }
@@ -415,6 +418,7 @@ app.use((req, res, next) => {
     res.status(404).render('404', { user: req.user, css: res.cssUrl });
 });
 
-app.listen(3000, () => {
-    console.log(chalk.yellow(chalk.bold(`Ferren`)), (chalk.white(`|`)), chalk.red(`Dashboard`), chalk.green(`online!`))
-});
+const server = app.listen(port, () => console.log(chalk.yellow(chalk.bold(`Ferren`)), (chalk.white(`|`)), chalk.red(`Dashboard`), chalk.green(`online!`)));
+
+server.keepAliveTimeout = 120 * 1000;
+server.headersTimeout = 120 * 1000;
