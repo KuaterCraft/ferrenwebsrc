@@ -158,27 +158,7 @@ app.get('/serverurl', async (req, res) => {
 })
 
 app.get('/', async (req, res) => {
-    const BotStats = process.env.serverUrl + "/botStats";
-    try {
-        const respo = await fetch(BotStats);
-        if (respo.status === 200) {
-            const data = await respo.json();
-            res.render('index', { user: req.user, css: res.cssUrl, data: data });
-        } else {
-            throw new Error("API returned non-200 status");
-        }
-    } catch (error) {
-        const msg = "Api down";
-        const data = {
-            guilds: msg,
-            users: msg,
-            slashCommand: msg,
-            databaseLatency: msg,
-            pingLatency: msg,
-            prefixCommand: msg
-        };
-        res.render('index', { user: req.user, css: res.cssUrl, data: data });
-    }
+    res.render('index', { user: req.user, css: res.cssUrl });
 });
 
 
@@ -371,6 +351,9 @@ app.post('/saveProfileData', async (req, res) => {
 app.post('/hexifyAuth', async (req, res) => {
     const authHeader = req.headers.authorization;
     var ip = req.headers['x-host-ip'] || req.socket.remoteAddress;
+    console.log("posted")
+    console.log(req.headers['x-host-ip'])
+    console.log(req.socket.remoteAddress)
     const reqVer = req.headers.version
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -385,9 +368,9 @@ app.post('/hexifyAuth', async (req, res) => {
         data.ip = ip;
         await data.save();
     }
-    let ver = require(`${process.cwd()}/src/config/bot`)
+
     if (reqVer) {
-        if (reqVer !== ver.PACKAGE_MUSIC) return res.status(401).json({ error: 'Unauthorized. There is a new verion of the bot in the store! download it as older version are not supported' });
+        if (reqVer !== `${process.env.PACKAGE_MUSIC}`) return res.status(401).json({ error: 'Unauthorized. There is a new verion of the bot in the store! download it as older version are not supported' });
     }
     //else {
     //    return res.status(401).json({ error: 'Unauthorized. There is a new verion of the bot in the store! download it older version are not supported' });
