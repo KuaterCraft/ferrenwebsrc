@@ -47,17 +47,6 @@
               <h2 class="fw-bold">Ferren Changelogs</h2>
               <p class="command-descreption">Find all Ferren bot commands and information you need fast and easy</p>
             </div>
-            <div class="col-sm-6 my-1">
-              <script async
-                src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4050940490843957"
-                crossorigin="anonymous"></script>
-              <!-- banner -->
-              <ins class="adsbygoogle" style="display:inline-block;width:100%;height:90px"
-                data-ad-client="ca-pub-4050940490843957" data-ad-slot="6770580457"></ins>
-              <script>
-                (adsbygoogle = window.adsbygoogle || []).push({});
-              </script>
-            </div>
           </div>
           <hr>
         </section>
@@ -200,76 +189,83 @@
                     })
                       .then(response => response.json())
                       .then(data => {
-                        const changelogContainer = document.getElementById('changelog-container');
+                        if (data === null) {
+                          const changelogContainer = document.getElementById('changelog-container');
+                          const errorMessage = document.createElement('div');
+                          errorMessage.innerText = 'Api is down!';
+                          changelogContainer.appendChild(errorMessage);
+                        } else {
+                          const changelogContainer = document.getElementById('changelog-container');
 
-                        // Sort the data by Code in ascending order
-                        data.sort((a, b) => b.Code - a.Code);
+                          // Sort the data by Code in ascending order
+                          data.sort((a, b) => b.Code - a.Code);
 
-                        // Loop through the sorted response data
-                        data.forEach((item, index) => {
-                          // Create the main container
-                          const commandsSection = document.createElement('div');
-                          commandsSection.classList.add('commands-section');
+                          // Loop through the sorted response data
+                          data.forEach((item, index) => {
+                            // Create the main container
+                            const commandsSection = document.createElement('div');
+                            commandsSection.classList.add('commands-section');
 
-                          // Create the accordion container
-                          const accordion = document.createElement('div');
-                          accordion.classList.add('accordion', 'accordion-flush', 'mt-2');
+                            // Create the accordion container
+                            const accordion = document.createElement('div');
+                            accordion.classList.add('accordion', 'accordion-flush', 'mt-2');
 
-                          // Create the accordion item
-                          const accordionItem = document.createElement('div');
-                          accordionItem.classList.add('accordion-item');
+                            // Create the accordion item
+                            const accordionItem = document.createElement('div');
+                            accordionItem.classList.add('accordion-item');
 
-                          // Create the accordion header
-                          const accordionHeader = document.createElement('h2');
-                          accordionHeader.classList.add('accordion-header');
+                            // Create the accordion header
+                            const accordionHeader = document.createElement('h2');
+                            accordionHeader.classList.add('accordion-header');
 
-                          // Create the button for the accordion
-                          const accordionButton = document.createElement('button');
-                          accordionButton.classList.add('accordion-button', 'collapsed');
-                          accordionButton.setAttribute('data-bs-toggle', 'collapse');
-                          accordionButton.setAttribute('data-bs-target', `#fnewcommand${index + 1}`);
-                          accordionButton.innerText = `Changelog #${data.length - index}`;
+                            // Create the button for the accordion
+                            const accordionButton = document.createElement('button');
+                            accordionButton.classList.add('accordion-button', 'collapsed');
+                            accordionButton.setAttribute('data-bs-toggle', 'collapse');
+                            accordionButton.setAttribute('data-bs-target', `#fnewcommand${index + 1}`);
+                            accordionButton.innerText = `Changelog #${data.length - index}`;
 
-                          // Append the button to the accordion header
-                          accordionHeader.appendChild(accordionButton);
+                            // Append the button to the accordion header
+                            accordionHeader.appendChild(accordionButton);
 
-                          // Create the accordion collapse
-                          const accordionCollapse = document.createElement('div');
-                          accordionCollapse.id = `fnewcommand${index + 1}`;
-                          accordionCollapse.classList.add('accordion-collapse', 'collapse');
+                            // Create the accordion collapse
+                            const accordionCollapse = document.createElement('div');
+                            accordionCollapse.id = `fnewcommand${index + 1}`;
+                            accordionCollapse.classList.add('accordion-collapse', 'collapse');
 
-                          // Create the accordion body
-                          const accordionBody = document.createElement('div');
-                          accordionBody.classList.add('accordion-body');
+                            // Create the accordion body
+                            const accordionBody = document.createElement('div');
+                            accordionBody.classList.add('accordion-body');
 
-                          // Create the usage examples span
-                          const usageExamples = document.createElement('span');
-                          usageExamples.innerText = 'Usage Examples:';
-                          accordionBody.appendChild(usageExamples);
-                          accordionBody.appendChild(document.createElement('br'));
+                            // Create the usage examples span
+                            const usageExamples = document.createElement('span');
+                            usageExamples.innerText = 'Usage Examples:';
+                            accordionBody.appendChild(usageExamples);
+                            accordionBody.appendChild(document.createElement('br'));
 
-                          // Create the description span
-                          const description = document.createElement('span');
-                          description.classList.add('examples');
-                          description.innerHTML = convertToAnchorTag(wrapInCodeTags(item.Log));
-                          accordionBody.appendChild(description);
+                            // Create the description span
+                            const description = document.createElement('span');
+                            description.classList.add('examples');
+                            description.innerHTML = convertToAnchorTag(wrapInCodeTags(item.Log));
+                            accordionBody.appendChild(description);
 
-                          // Append the accordion body to the accordion collapse
-                          accordionCollapse.appendChild(accordionBody);
+                            // Append the accordion body to the accordion collapse
+                            accordionCollapse.appendChild(accordionBody);
 
-                          // Append the accordion header and collapse to the accordion item
-                          accordionItem.appendChild(accordionHeader);
-                          accordionItem.appendChild(accordionCollapse);
+                            // Append the accordion header and collapse to the accordion item
+                            accordionItem.appendChild(accordionHeader);
+                            accordionItem.appendChild(accordionCollapse);
 
-                          // Append the accordion item to the accordion
-                          accordion.appendChild(accordionItem);
+                            // Append the accordion item to the accordion
+                            accordion.appendChild(accordionItem);
 
-                          // Append the accordion to the commands section
-                          commandsSection.appendChild(accordion);
+                            // Append the accordion to the commands section
+                            commandsSection.appendChild(accordion);
 
-                          // Append the commands section to the changelog container
-                          changelogContainer.appendChild(commandsSection);
-                        });
+                            // Append the commands section to the changelog container
+                            changelogContainer.appendChild(commandsSection);
+                          });
+                        }
                       })
                       .catch(error => {
                         console.log('An error occurred:', error);

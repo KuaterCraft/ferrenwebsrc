@@ -6,6 +6,7 @@ const session = require('express-session');
 const DiscordStrategy = require('passport-discord').Strategy;
 const chalk = require('chalk');
 const mongoose = require('mongoose');
+const hexifyAuth = require(`./database/models/hexifyAuth`);
 const Levels = require(`./database/models/levelsConfig`);
 const profile = require(`./database/models/profile.js`);
 const guildFunc = require(`./database/models/functions`);
@@ -73,6 +74,10 @@ app.use((req, res, next) => {
 
     next();
 });
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Internal Server Error');
+});
 app.use((req, res, next) => {
     let pathPrefix;
     if (req.path.startsWith('/server/')) {
@@ -100,7 +105,6 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser((user, done) => {
     done(null, user);
 });
-
 passport.use(new DiscordStrategy({
     clientID: '1064420967666954280',
     clientSecret: 'N9ErfcgD5hgRSJ56KYdjCoZiMu50pKjN',
@@ -125,25 +129,50 @@ app.get('/changelogs', async (req, res) => {
 });
 
 app.get('/changelog', async (req, res) => {
-    const resp = await fetch(`${process.env.serverUrl}/changelog`, {
-        method: "GET"
-    })
-    const data = await resp.json();
-    res.json(data)
+    try {
+        const resp = await fetch(`${process.env.serverUrl}/changelog`, {
+            method: "GET"
+        })
+        const data = await resp.json();
+        console.log(data)
+        res.json(data)
+    } catch (error) {
+        const data = null
+        res.json(data)
+    }
 })
 
 app.get('/callback', passport.authenticate('discord', {
+    failureMessage: true,
     failureRedirect: '/login',
 }), (req, res) => {
     res.redirect('/');
 });
 
 app.get('/', async (req, res) => {
-    const BotStats = process.env.serverUrl + "/botStats"
-    const respo = await fetch(BotStats);
-    const data = await respo.json();
-    res.render('index', { user: req.user, css: res.cssUrl, data: data });
+    const BotStats = process.env.serverUrl + "/botStats";
+    try {
+        const respo = await fetch(BotStats);
+        if (respo.status === 200) {
+            const data = await respo.json();
+            res.render('index', { user: req.user, css: res.cssUrl, data: data });
+        } else {
+            throw new Error("API returned non-200 status");
+        }
+    } catch (error) {
+        const msg = "Api down";
+        const data = {
+            guilds: msg,
+            users: msg,
+            slashCommand: msg,
+            databaseLatency: msg,
+            pingLatency: msg,
+            prefixCommand: msg
+        };
+        res.render('index', { user: req.user, css: res.cssUrl, data: data });
+    }
 });
+
 
 
 app.get('/privacy', (req, res) => {
@@ -165,7 +194,7 @@ app.get('/manage', (req, res) => {
         return {
             serverId: guild.id,
             serverName: guild.name,
-            avatarURL: guild.icon ? `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png` : "https://cdn.discordapp.com/attachments/1117705569336299592/1182312755018092544/477b12750753b3449372ab8367175d16.png?ex=65843d8f&is=6571c88f&hm=934962e12c0a0145c962ffb18e435c3e61171687a9aebd8fca63b9de5b3e2b36&",
+            avatarURL: guild.icon ? `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png` : "https://cdn.discordapp.com/avatars/1064420967666954280/92f9ff369b1d58d31b6de4458b7c3db4.webp?size=1024",
             memberCount: guild.memberCount,
         };
     });
@@ -187,11 +216,16 @@ app.get('/servers', async (req, res) => {
 });
 
 app.get('/guilddata', async (req, res) => {
-    const resp = await fetch(`${process.env.serverUrl}/guilddata`, {
-        method: "GET"
-    });
-    const data = await resp.json();
-    res.json(data)
+    try {
+        const resp = await fetch(`${process.env.serverUrl}/guilddata`, {
+            method: "GET"
+        });
+        const data = await resp.json();
+        res.json(data)
+    } catch (error) {
+        const data = null
+        res.json(data)
+    }
 })
 
 app.get('/user/:userId', async (req, res) => {
@@ -232,7 +266,7 @@ app.get('/server/:serverId', async (req, res) => {
         return {
             serverId: guild.id,
             serverName: guild.name,
-            avatarURL: guild.icon ? `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png` : "https://cdn.discordapp.com/attachments/1117705569336299592/1182312755018092544/477b12750753b3449372ab8367175d16.png?ex=65843d8f&is=6571c88f&hm=934962e12c0a0145c962ffb18e435c3e61171687a9aebd8fca63b9de5b3e2b36&",
+            avatarURL: guild.icon ? `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png` : "https://cdn.discordapp.com/avatars/1064420967666954280/92f9ff369b1d58d31b6de4458b7c3db4.webp?size=1024",
             memberCount: guild.memberCount,
         };
     });
@@ -276,8 +310,7 @@ app.get('/server/:serverId', async (req, res) => {
 
         res.render('server', { user: req.user, currentGuild, guildInfo, guildFunc: guildDataFunc, css: res.cssUrl });
     } catch (error) {
-        console.error('Error fetching guild information:', error);
-        res.status(500).send('Internal Server Error');
+        return res.send('<script>alert("API DOWN!"); window.location.href = "/";</script>');
     }
 });
 
@@ -325,7 +358,40 @@ app.post('/saveProfileData', async (req, res) => {
         console.log(error)
         res.status(500).json({ success: false, error: 'Internal Server Error' });
     }
-})
+});
+
+app.post('/hexifyAuth', async (req, res) => {
+    const authHeader = req.headers.authorization;
+    var ip = req.headers['x-host-ip'] || req.socket.remoteAddress;
+    const reqVer = req.headers.version
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const token = authHeader.slice(7);
+
+    const data = await hexifyAuth.findOne({ Key: token });
+    const version = await hexifyAuth.findOne({ package: "music" });
+    if (data.ip === "") {
+        data.ip = ip;
+        await data.save();
+    }
+    let ver = require(`${process.cwd()}/src/config/bot`)
+    if (reqVer) {
+        if (reqVer !== ver.PACKAGE_MUSIC) return res.status(401).json({ error: 'Unauthorized. There is a new verion of the bot in the store! download it as older version are not supported' });
+    }
+    //else {
+    //    return res.status(401).json({ error: 'Unauthorized. There is a new verion of the bot in the store! download it older version are not supported' });
+    //}
+    if (ip !== data.ip) return res.status(401).json({ error: 'Unauthorized. You cannot use multiple hosts with single license key. Only 1 ip is allowed join discord for support. Get a license key at discord.gg/DfKpcAnU67' });
+
+    if (!data) {
+        return res.status(401).json({ error: 'Unauthorized. Get a license key at discord.gg/DfKpcAnU67' });
+    }
+    res.json({ success: true, status: "Authorized" });
+});
+
 app.post('/saveRankCard', async (req, res) => {
     if (!req.user) {
         return res.status(401).json({ error: 'Unauthorized' });

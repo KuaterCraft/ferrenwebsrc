@@ -84,7 +84,7 @@
           <div class="col-lg-6">
             <div class="h-100 d-flex flex-column justify-content-center bg-primary p-5">
               <img class="imageferren"
-                src="https://cdn.discordapp.com/attachments/1064773686550343722/1198302871402336338/FerrenBot.png">
+                src="https://cdn.discordapp.com/avatars/1064420967666954280/92f9ff369b1d58d31b6de4458b7c3db4.webp?size=1024">
             </div>
           </div>
         </div>
@@ -140,7 +140,12 @@
                         method: "GET"
                       });
                       const data = await response.json();
-                      console.log(data)
+                      if (data === null) {
+                        const changelogContainer = document.getElementById('serverDataContainer');
+                        const errorMessage = document.createElement('div');
+                        errorMessage.innerText = 'Api is down!';
+                        changelogContainer.appendChild(errorMessage);
+                      } else {
                       const excludedServerIds = ['1064769300684083311', '952589068389212171', '1008238725500780604', '1015297785551130654', '1010953438684778586'];
                       const serverDataContainer = document.getElementById('serverDataContainer');
                       const searchInput = document.getElementById('searchInput');
@@ -175,7 +180,7 @@
             </div>
             <div class="content text-center px-5">
               <div class="avatar-circle mx-auto mb-4">
-                ${avatarURL ? `<img src="${avatarURL}" alt="Server Avatar">` : ''}
+                ${avatarURL ? `<img src="${avatarURL}" alt="Server Avatar">` : `<img src="https://cdn.discordapp.com/avatars/1064420967666954280/92f9ff369b1d58d31b6de4458b7c3db4.webp?size=1024" alt="Server Avatar">`}
               </div>
               <h3 class="mb-3">Server Name: ${serverName}</h3>
               <p class="mb-0">Member Count: ${memberCount} | Server ID: ${serverId}</p>
@@ -192,6 +197,7 @@
 
                       // Initial rendering
                       renderServerData(data);
+                    }
                     } catch (error) {
                       console.error('Error fetching server data:', error);
                     }
