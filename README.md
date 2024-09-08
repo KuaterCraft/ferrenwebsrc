@@ -1,3 +1,5 @@
 # ferrenwebsrc
 
-## Src of ferren web
+## Src of old ferren web
+
+### Might be outdated :p dont blame me i left EJS and shifted to reactjs and nodejs
